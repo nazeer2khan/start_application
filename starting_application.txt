@@ -1,0 +1,12 @@
+function Start-Application {
+
+    param ( $Application )
+    $a = @(Get-ChildItem -Path 'C:\Program Files' -Filter $Application'.exe' -Recurse -File -erroraction 'silentlycontinue'| ForEach-Object {$_.FullName})
+    if ($a.Length -eq 0) {
+    $a = @(Get-ChildItem -Path 'C:\Program Files (x86)' -Filter $Application'.exe' -Recurse -File -erroraction 'silentlycontinue' | ForEach-Object {$_.FullName})
+    if ($a.Length -eq 0) {
+    $a = @(Get-ChildItem -Path '.\AppData' -Filter $Application'.exe' -Recurse -File -erroraction 'silentlycontinue' | ForEach-Object {$_.FullName})
+    }
+    }
+    Start-Process -FilePath $a[0]
+}
